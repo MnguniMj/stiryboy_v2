@@ -3,6 +3,7 @@ import { Suspense } from "react";
 
 import { InfiniteProductGrid } from "@/components/product/infinite-product-grid";
 import { SearchControls } from "@/components/product/search-controls";
+import { Spinner } from "@/components/product/spinner";
 import { searchProducts } from "@/lib/products";
 import type { SearchParams } from "@/types";
 
@@ -41,12 +42,14 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         </p>
       </div>
 
-      <Suspense fallback={null}>
+      <Suspense fallback={<Spinner />}>
         <SearchControls />
       </Suspense>
 
       {items.length > 0 ? (
-        <InfiniteProductGrid products={results} batchSize={8} />
+        <Suspense fallback={<Spinner />}>
+  <InfiniteProductGrid products={results} batchSize={8} />
+</Suspense>
       ) : (
         <div className="rounded-lg border border-slate-200 bg-white p-10 text-center shadow-sm dark:border-white/10 dark:bg-slate-900">
           <h2 className="text-2xl font-black tracking-normal">No products found</h2>
