@@ -1,3 +1,5 @@
+import RecentlyViewed from "@/components/product/RecentlyViewed";
+import TrackView from "@/components/product/TrackView";
 import { CheckCircle2, RotateCcw, ShieldCheck, Truck } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -59,6 +61,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
         </Link>
       </div>
 
+      {product && <TrackView product={product} />}
       <section className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(360px,0.9fr)_320px]">
         <ProductGallery images={product.images} title={product.title} />
 
@@ -131,6 +134,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
           <ProductGrid products={related} />
         </section>
       )}
+      <RecentlyViewed />
+      
     </div>
   );
 }
