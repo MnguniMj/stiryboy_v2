@@ -24,7 +24,9 @@ export function Rating({
           />
         ))}
       </div>
-      <span className="font-semibold text-slate-700 dark:text-slate-200">{value.toFixed(1)}</span>
+      <span className="font-semibold text-slate-700 dark:text-slate-200">
+  {Number(value).toFixed(1)}
+</span>
       {typeof count === "number" && <span className="text-amazon-teal">({compactNumber(count)})</span>}
     </div>
   );
