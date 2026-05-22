@@ -16,7 +16,7 @@ export function DashboardShell({ children, title }: { children: React.ReactNode;
           <p className="text-xs font-black uppercase text-amazon-orange">Your account</p>
           <h1 className="mt-1 text-2xl font-black tracking-normal text-slate-950 dark:text-white">{title}</h1>
         </div>
-        <nav className="mt-2 space-y-1">
+        <nav className="mt-2 flex flex-row overflow-x-auto gap-1 lg:flex-col lg:space-y-1 lg:gap-0 no-scrollbar">
           {links.map((link) => {
             const Icon = link.icon;
 
@@ -24,7 +24,7 @@ export function DashboardShell({ children, title }: { children: React.ReactNode;
               <Link
                 key={link.href}
                 href={link.href}
-                className="flex items-center gap-3 rounded-md px-3 py-3 text-sm font-bold text-slate-700 hover:bg-amber-50 hover:text-amazon-teal dark:text-slate-200 dark:hover:bg-white/10"
+                className="flex shrink-0 items-center gap-2 rounded-md px-3 py-2 text-sm font-bold text-slate-700 hover:bg-amber-50 hover:text-amazon-teal dark:text-slate-200 dark:hover:bg-white/10 lg:gap-3 lg:py-3"
               >
                 <Icon className="h-4 w-4" />
                 {link.label}

@@ -1,6 +1,6 @@
 "use client";
 
-import { SlidersHorizontal } from "lucide-react";
+import { ChevronDown, ChevronUp, SlidersHorizontal } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FormEvent, useState } from "react";
 
@@ -13,6 +13,7 @@ export function SearchControls() {
   const [category, setCategory] = useState(searchParams.get("category") ?? "All");
   const [sort, setSort] = useState(searchParams.get("sort") ?? "");
   const [rating, setRating] = useState(searchParams.get("rating") ?? "");
+  const [isOpen, setIsOpen] = useState(false);
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -27,12 +28,23 @@ export function SearchControls() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-slate-900">
-      <div className="mb-4 flex items-center gap-2 font-black text-slate-950 dark:text-white">
-        <SlidersHorizontal className="h-5 w-5 text-amazon-orange" />
-        Filters
-      </div>
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+    <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-slate-900">
+      <button
+        type="button"
+        onClick={() => setIsOpen((value) => !value)}
+        className="flex w-full items-center justify-between font-black text-slate-950 dark:text-white sm:pointer-events-none sm:cursor-default"
+      >
+        <div className="flex items-center gap-2">
+          <SlidersHorizontal className="h-5 w-5 text-amazon-orange" />
+          <span>Filters</span>
+        </div>
+        <div className="text-amazon-teal sm:hidden">
+          {isOpen ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+        </div>
+      </button>
+
+      <form onSubmit={onSubmit} className={`${isOpen ? "block" : "hidden"} mt-4 sm:mt-0 sm:block`}>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
         <label className="block">
           <span className="mb-1 block text-xs font-bold uppercase text-slate-500">Search</span>
           <input
@@ -86,5 +98,6 @@ export function SearchControls() {
         </button>
       </div>
     </form>
+  </div>
   );
 }
