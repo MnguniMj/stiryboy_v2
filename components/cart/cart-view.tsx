@@ -46,37 +46,45 @@ export function CartView() {
 
         <div className="divide-y divide-slate-200 dark:divide-white/10">
           {items.map(({ product, quantity }) => (
-            <article key={product.id} className="grid gap-4 py-5 sm:grid-cols-[160px_1fr_auto]">
-              <Link href={`/products/${product.slug}`} className="relative aspect-square overflow-hidden rounded-md bg-slate-100">
-                <Image src={product.images[0]} alt={product.title} fill sizes="160px" className="object-cover" />
-              </Link>
-              <div>
-                <Link href={`/products/${product.slug}`} className="text-lg font-bold text-slate-950 hover:text-amazon-teal dark:text-white">
-                  {product.title}
+            <article key={product.id} className="flex flex-col gap-4 py-5 sm:flex-row sm:items-start sm:justify-between">
+              <div className="flex gap-4">
+                <Link href={`/products/${product.slug}`} className="relative h-24 w-24 shrink-0 overflow-hidden rounded-md bg-slate-100 sm:h-36 sm:w-36">
+                  <Image src={product.images[0]} alt={product.title} fill sizes="(max-width: 640px) 96px, 144px" className="object-cover" />
                 </Link>
-                <p className="mt-1 text-sm text-amazon-green">In stock and eligible for FREE delivery</p>
-                <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">{product.brand} • {product.category}</p>
-                <div className="mt-4 flex flex-wrap items-center gap-3">
-                  <div className="inline-flex h-10 items-center overflow-hidden rounded-full border border-slate-200 dark:border-white/10">
-                    <button type="button" onClick={() => updateQuantity(product.id, quantity - 1)} className="px-3" aria-label="Decrease quantity">
-                      <Minus className="h-4 w-4" />
-                    </button>
-                    <span className="min-w-10 text-center text-sm font-bold">{quantity}</span>
-                    <button type="button" onClick={() => updateQuantity(product.id, quantity + 1)} className="px-3" aria-label="Increase quantity">
-                      <Plus className="h-4 w-4" />
+                <div className="flex-1 min-w-0">
+                  <Link href={`/products/${product.slug}`} className="text-base font-bold text-slate-950 hover:text-amazon-teal line-clamp-2 dark:text-white sm:text-lg">
+                    {product.title}
+                  </Link>
+                  <p className="mt-1 text-xs text-amazon-green sm:text-sm">In stock and eligible for FREE delivery</p>
+                  <p className="mt-2 text-xs text-slate-600 dark:text-slate-300 sm:text-sm">{product.brand} • {product.category}</p>
+                  
+                  {/* Price shown on mobile */}
+                  <div className="mt-3 flex items-center justify-between sm:hidden">
+                    <span className="text-lg font-black text-slate-950 dark:text-white">{formatPrice(product.price * quantity)}</span>
+                  </div>
+
+                  <div className="mt-4 flex flex-wrap items-center gap-3">
+                    <div className="inline-flex h-9 items-center overflow-hidden rounded-full border border-slate-200 dark:border-white/10 sm:h-10">
+                      <button type="button" onClick={() => updateQuantity(product.id, quantity - 1)} className="px-3" aria-label="Decrease quantity">
+                        <Minus className="h-3 w-3" />
+                      </button>
+                      <span className="min-w-8 text-center text-xs font-bold sm:min-w-10 sm:text-sm">{quantity}</span>
+                      <button type="button" onClick={() => updateQuantity(product.id, quantity + 1)} className="px-3" aria-label="Increase quantity">
+                        <Plus className="h-3 w-3" />
+                      </button>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => removeItem(product.id)}
+                      className="inline-flex items-center gap-1 text-xs font-bold text-amazon-teal hover:text-red-600 sm:text-sm"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                      Remove
                     </button>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => removeItem(product.id)}
-                    className="inline-flex items-center gap-1 text-sm font-bold text-amazon-teal hover:text-red-600"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                    Remove
-                  </button>
                 </div>
               </div>
-              <div className="text-xl font-black text-slate-950 dark:text-white">{formatPrice(product.price * quantity)}</div>
+              <div className="hidden text-xl font-black text-slate-950 dark:text-white sm:block">{formatPrice(product.price * quantity)}</div>
             </article>
           ))}
         </div>

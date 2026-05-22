@@ -14,7 +14,7 @@ export function DealShelf({ products }: { products: Product[] }) {
         subtitle="High-discount picks with Prime-style delivery promise and clean marketplace cards."
         href="/search?sort=discount"
       />
-      <div className="flex gap-4 overflow-x-auto pb-2">
+      <div className="flex gap-4 overflow-x-auto pb-2 no-scrollbar">
         {products
           .slice()
           .sort((a, b) => b.discount - a.discount)

@@ -81,6 +81,18 @@ export default async function ProductPage({ params }: ProductPageProps) {
             <p className="mt-2 text-sm font-medium text-slate-600 dark:text-slate-300">Inclusive of all taxes. EMI starts at {formatPrice(Math.ceil(product.price / 12))}/month.</p>
           </div>
 
+          {/* Mobile actions card - visible below lg screens */}
+          <div className="mt-6 space-y-4 lg:hidden">
+            <ProductActions product={product} />
+            <div className="rounded-lg border border-slate-200 bg-white p-5 text-sm shadow-sm dark:border-white/10 dark:bg-slate-900">
+              <div className="flex gap-2 text-amazon-green">
+                <CheckCircle2 className="h-5 w-5" />
+                <strong>In stock</strong>
+              </div>
+              <p className="mt-3 text-slate-600 dark:text-slate-300">Ships from Amazon Fulfilment India. Sold by Cloudtail-style demo seller.</p>
+            </div>
+          </div>
+
           <p className="mt-5 leading-7 text-slate-700 dark:text-slate-300">{product.description}</p>
           <div className="mt-5 flex flex-wrap gap-2">
             {product.tags.map((tag) => (
@@ -102,7 +114,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
           </div>
         </div>
 
-        <div className="space-y-4">
+        {/* Desktop actions card - hidden below lg screens */}
+        <div className="hidden space-y-4 lg:block">
           <ProductActions product={product} />
           <div className="rounded-lg border border-slate-200 bg-white p-5 text-sm shadow-sm dark:border-white/10 dark:bg-slate-900">
             <div className="flex gap-2 text-amazon-green">

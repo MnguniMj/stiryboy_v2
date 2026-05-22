@@ -36,7 +36,7 @@ export function PrimePanel() {
         </div>
         <div className="grid gap-0 sm:grid-cols-2">
           {items.map((item) => (
-            <div key={item.title} className="border-b border-slate-200 p-6 last:border-b-0 odd:border-r dark:border-white/10">
+            <div key={item.title} className="border-b border-slate-200 p-6 sm:[&:nth-child(3)]:border-b-0 last:border-b-0 sm:odd:border-r dark:border-white/10">
               <item.icon className="h-7 w-7 text-amazon-teal" />
               <h3 className="mt-4 font-bold text-slate-950 dark:text-white">{item.title}</h3>
               <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">{item.copy}</p>

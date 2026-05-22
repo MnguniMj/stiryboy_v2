@@ -40,7 +40,7 @@ export function Header() {
         <button
           type="button"
           onClick={() => setMenuOpen((value) => !value)}
-          className="rounded-md p-2 hover:bg-white/10 lg:hidden"
+          className="rounded-md p-2 hover:bg-white/10 sm:hidden"
           aria-label="Toggle menu"
         >
           {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -131,8 +131,24 @@ export function Header() {
         </div>
       </div>
 
+      {/* Persistent Mobile Search Bar */}
+      <div className="px-3 pb-3 md:hidden">
+        <form onSubmit={onSearch} className="flex overflow-hidden rounded-md border-2 border-transparent bg-white focus-within:border-amazon-orange">
+          <input
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Search Amazon.in"
+            className="min-w-0 flex-1 px-3 py-2 text-sm text-slate-950 outline-none"
+            aria-label="Search products"
+          />
+          <button type="submit" className="flex w-12 items-center justify-center bg-amazon-gold text-slate-950 hover:bg-[#f5a742]" aria-label="Search">
+            <Search className="h-4 w-4" />
+          </button>
+        </form>
+      </div>
+
       <div className="border-t border-white/10 bg-amazon-blue">
-        <nav className="mx-auto flex max-w-7xl items-center gap-5 overflow-x-auto px-4 py-2 text-sm font-semibold sm:px-5">
+        <nav className="mx-auto flex max-w-7xl items-center gap-5 overflow-x-auto px-4 py-2 text-sm font-semibold sm:px-5 no-scrollbar">
           <Link href="/search" className="flex shrink-0 items-center gap-1 hover:text-amazon-gold">
             <Menu className="h-4 w-4" />
             All
@@ -152,19 +168,7 @@ export function Header() {
       </div>
 
       {menuOpen && (
-        <div className="border-t border-white/10 bg-amazon-navy p-4 lg:hidden">
-          <form onSubmit={onSearch} className="mb-4 flex overflow-hidden rounded-md bg-white">
-            <input
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search Amazon.in"
-              className="min-w-0 flex-1 px-4 py-3 text-slate-950 outline-none"
-              aria-label="Search products"
-            />
-            <button type="submit" className="w-12 bg-amazon-gold text-slate-950" aria-label="Search">
-              <Search className="mx-auto h-5 w-5" />
-            </button>
-          </form>
+        <div className="border-t border-white/10 bg-amazon-navy p-4 sm:hidden">
           <div className="grid grid-cols-2 gap-2 text-sm">
             {session?.user ? (
               <>
