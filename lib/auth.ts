@@ -2,6 +2,7 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import bcrypt from "bcryptjs";
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GitHubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import { z } from "zod";
 
@@ -24,6 +25,11 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID || "google-client-id",
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || "google-client-secret",
+      allowDangerousEmailAccountLinking: true
+    }),
+    GitHubProvider({
+      clientId: process.env.GITHUB_CLIENT_ID || "github-client-id",
+      clientSecret: process.env.GITHUB_CLIENT_SECRET || "github-client-secret",
       allowDangerousEmailAccountLinking: true
     }),
     CredentialsProvider({

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Chrome, Eye, EyeOff, Loader2, Lock, Mail, UserRound } from "lucide-react";
+import { Chrome, Eye, EyeOff, Github, Loader2, Lock, Mail, UserRound } from "lucide-react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -81,15 +81,24 @@ export function AuthCard({ mode }: { mode: "login" | "signup" }) {
         </p>
       </div>
 
-      <Button
-        type="button"
-        variant="outline"
-        className="w-full"
-        onClick={() => signIn("google", { callbackUrl })}
-      >
-        <Chrome className="h-4 w-4" />
-        Continue with Google
-      </Button>
+      <div className="grid gap-2">
+        <Button type="button" variant="outline" className="w-full" onClick={() => signIn("google", { callbackUrl })}>
+          <Chrome className="h-4 w-4" />
+          Continue with Google
+        </Button>
+        <Button type="button" variant="outline" className="w-full" onClick={() => signIn("github", { callbackUrl })}>
+          <Github className="h-4 w-4" />
+          Continue with GitHub
+        </Button>
+      </div>
+
+      {mode === "login" && (
+        <p className="mt-3 text-center text-sm">
+          <Link href="/forgot-password" className="text-amazon-teal hover:underline">
+            Forgot password?
+          </Link>
+        </p>
+      )}
 
       <div className="my-5 flex items-center gap-3 text-xs font-semibold uppercase text-slate-400">
         <span className="h-px flex-1 bg-slate-200 dark:bg-white/10" />

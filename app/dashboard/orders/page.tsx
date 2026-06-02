@@ -66,12 +66,13 @@ export default async function OrdersPage() {
       }
     ]
   };
-  const visibleOrders = orders.length > 0 ? orders : [demoOrder];
+  type OrderView = typeof demoOrder;
+  const visibleOrders: OrderView[] = orders.length > 0 ? (orders as OrderView[]) : [demoOrder];
 
   return (
     <DashboardShell title="Orders">
       <div className="space-y-5">
-        {visibleOrders.map((order) => (
+        {visibleOrders.map((order: OrderView) => (
           <article key={order.id} className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm dark:border-white/10 dark:bg-slate-900">
             <div className="grid gap-3 bg-slate-100 px-5 py-4 text-sm dark:bg-white/10 sm:grid-cols-4">
               <div>
@@ -92,7 +93,7 @@ export default async function OrdersPage() {
               </div>
             </div>
             <div className="divide-y divide-slate-200 dark:divide-white/10">
-              {order.items.map((item) => (
+              {order.items.map((item: OrderView["items"][number]) => (
                 <div key={item.id} className="flex gap-4 p-5">
                   <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-md bg-slate-100">
                     <Image src={item.image} alt={item.title} fill sizes="80px" className="object-cover" />

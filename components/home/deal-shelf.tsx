@@ -6,11 +6,11 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { formatPrice } from "@/lib/utils";
 import type { Product } from "@/types";
 
-export function DealShelf({ products }: { products: Product[] }) {
+export function DealShelf({ products, title = "Lightning deals" }: { products: Product[]; title?: string }) {
   return (
-    <section className="mx-auto max-w-7xl px-4 sm:px-5">
+    <section className="amazon-section">
       <SectionHeading
-        title="Lightning deals"
+        title={title}
         subtitle="High-discount picks with Prime-style delivery promise and clean marketplace cards."
         href="/search?sort=discount"
       />

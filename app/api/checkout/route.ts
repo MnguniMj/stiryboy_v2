@@ -18,23 +18,19 @@ export async function POST(request: Request) {
   const payload = checkoutSchema.parse(await request.json());
   const productIds = payload.items.map((item) => item.productId);
 
-  let dbProducts = await prisma.product.findMany({
+  const dbProducts = await prisma.product.findMany({
     where: { id: { in: productIds } }
   });
 
-  if (dbProducts.length === 0) {
-    dbProducts = payload.items
-      .map((item) => getProductById(item.productId))
-      .filter(Boolean)
-      .map((product) => ({
-        ...product!,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      }));
-  }
+  const catalogProducts =
+    dbProducts.length > 0
+      ? dbProducts
+      : payload.items
+          .map((item) => getProductById(item.productId))
+          .filter((product): product is NonNullable<typeof product> => Boolean(product));
 
   const orderItems = payload.items.map((item) => {
-    const product = dbProducts.find((entry) => entry.id === item.productId);
+    const product = catalogProducts.find((entry) => entry.id === item.productId);
 
     if (!product) {
       throw new Error("Product no longer exists.");

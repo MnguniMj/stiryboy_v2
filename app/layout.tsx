@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 
 import { Footer } from "@/components/layout/footer";
-import { Header } from "@/components/layout/header";
+import { Navbar } from "@/components/layout/navbar";
+import { AiShoppingAssistant } from "@/components/ai/shopping-assistant";
 import { AppProviders } from "@/components/providers/app-providers";
 import "./globals.css";
 
@@ -27,10 +28,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body className="flex min-h-screen flex-col">
         <AppProviders>
           <Suspense fallback={null}>
-            <Header />
+            <Navbar />
           </Suspense>
-          <main className="flex-1">{children}</main>
+          <main className="flex-1 bg-amazon-page dark:bg-slate-950">{children}</main>
           <Footer />
+          <AiShoppingAssistant />
         </AppProviders>
       </body>
     </html>

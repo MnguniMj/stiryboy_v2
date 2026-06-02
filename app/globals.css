@@ -4,10 +4,20 @@
 
 :root {
   color-scheme: light;
+  --amazon-page: #eaeded;
+  --amazon-card: #ffffff;
+  --amazon-text: #0f1111;
+  --amazon-text-secondary: #565959;
+  --amazon-border: #d5d9d9;
 }
 
 .dark {
   color-scheme: dark;
+  --amazon-page: #0f172a;
+  --amazon-card: #1e293b;
+  --amazon-text: #e2e8f0;
+  --amazon-text-secondary: #94a3b8;
+  --amazon-border: rgba(255, 255, 255, 0.1);
 }
 
 * {
@@ -20,29 +30,16 @@ html {
 
 body {
   min-height: 100vh;
-  background: #f8fafc;
-  color: #0f172a;
-  font-family:
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
-  font-feature-settings:
-    "rlig" 1,
-    "calt" 1;
-}
-
-.dark body {
-  background: #020617;
-  color: #e2e8f0;
+  background: var(--amazon-page);
+  color: var(--amazon-text);
+  font-family: "Amazon Ember", Arial, ui-sans-serif, system-ui, sans-serif;
+  font-feature-settings: "rlig" 1, "calt" 1;
+  -webkit-font-smoothing: antialiased;
 }
 
 ::selection {
   background: #febd69;
-  color: #111827;
+  color: #0f1111;
 }
 
 input,
@@ -52,7 +49,14 @@ textarea {
 }
 
 select option {
-  color: #0f172a;
+  color: #0f1111;
+}
+
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .line-clamp-2 {
@@ -62,14 +66,34 @@ select option {
   overflow: hidden;
 }
 
+@layer components {
+  .amazon-card {
+    @apply rounded border border-slate-200 bg-white p-4 shadow-card transition hover:shadow-cardHover dark:border-white/10 dark:bg-slate-900;
+  }
+
+  .amazon-section {
+    @apply mx-auto max-w-amazon px-3 py-4 sm:px-4;
+  }
+
+  .amazon-btn-primary {
+    @apply rounded-full bg-amazon-gold px-4 py-2 text-sm font-medium text-slate-950 shadow-sm transition hover:bg-[#f5c78a];
+  }
+
+  .amazon-btn-secondary {
+    @apply rounded-full border border-slate-300 bg-gradient-to-b from-slate-50 to-slate-200 px-4 py-2 text-sm shadow-sm transition hover:from-slate-100 hover:to-slate-300 dark:border-white/20 dark:from-slate-800 dark:to-slate-900;
+  }
+
+  .amazon-link {
+    @apply text-amazon-teal hover:text-amazon-orange hover:underline;
+  }
+}
+
 @layer utilities {
-  /* Hide scrollbar for Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
-  /* Hide scrollbar for IE, Edge and Firefox */
   .no-scrollbar {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }
