@@ -24,12 +24,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body>
+      <body className="flex min-h-screen flex-col">
         <AppProviders>
           <Suspense fallback={null}>
             <Header />
           </Suspense>
-          <main>{children}</main>
+          <main className="flex-1">{children}</main>
           <Footer />
         </AppProviders>
       </body>

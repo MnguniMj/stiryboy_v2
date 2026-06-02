@@ -14,7 +14,7 @@ export function formatPrice(value: number) {
 }
 
 export function compactNumber(value: number) {
-  return new Intl.NumberFormat("en-IN", {
+  return new Intl.NumberFormat("en-US", {
     notation: "compact",
     maximumFractionDigits: 1
   }).format(value);
