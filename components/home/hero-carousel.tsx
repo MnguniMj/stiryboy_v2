@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,38 +10,76 @@ import { heroSlides } from "@/lib/data";
 
 export function HeroCarousel() {
   const [active, setActive] = useState(0);
+  const [previous, setPrevious] = useState<number | null>(null);
   const slide = heroSlides[active];
+  const previousSlide = previous === null ? null : heroSlides[previous];
+
+  function transitionTo(getNext: (current: number) => number) {
+    setActive((current) => {
+      const next = (getNext(current) + heroSlides.length) % heroSlides.length;
+
+      if (next !== current) {
+        setPrevious(current);
+      }
+
+      return next;
+    });
+  }
 
   useEffect(() => {
     const timer = window.setInterval(() => {
-      setActive((value) => (value + 1) % heroSlides.length);
+      transitionTo((value) => value + 1);
     }, 5500);
 
     return () => window.clearInterval(timer);
   }, []);
 
+  useEffect(() => {
+    if (previous === null) {
+      return;
+    }
+
+    const clearPrevious = window.setTimeout(() => {
+      setPrevious(null);
+    }, 650);
+
+    return () => window.clearTimeout(clearPrevious);
+  }, [active, previous]);
+
   function move(direction: number) {
-    setActive((value) => (value + direction + heroSlides.length) % heroSlides.length);
+    transitionTo((value) => value + direction);
   }
 
   return (
-    <section className="relative min-h-[520px] overflow-hidden bg-slate-950 text-white">
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={slide.title}
-          initial={{ opacity: 0, scale: 1.02 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.98 }}
-          transition={{ duration: 0.55 }}
-          className="absolute inset-0"
-        >
-          <Image src={slide.image} alt={slide.title} fill priority sizes="100vw" className="object-cover" />
+    <section className="relative isolate min-h-[520px] overflow-hidden bg-slate-950 text-white">
+      {previousSlide && previous !== active ? (
+        <div className="absolute inset-0 z-0">
+          <Image
+            src={previousSlide.image}
+            alt={previousSlide.title}
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
           <div className="absolute inset-0 bg-gradient-to-r from-amazon-navy via-amazon-navy/70 to-transparent" />
-          <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-slate-50 to-transparent dark:from-slate-950" />
-        </motion.div>
-      </AnimatePresence>
+          <div className="hero-bottom-fade absolute inset-x-0 bottom-0" />
+        </div>
+      ) : null}
 
-      <div className="relative mx-auto flex min-h-[520px] max-w-7xl flex-col justify-center px-5 py-12">
+      <motion.div
+        key={slide.title}
+        initial={previousSlide ? { opacity: 0 } : false}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+        className="absolute inset-0 z-10"
+      >
+        <Image src={slide.image} alt={slide.title} fill priority sizes="100vw" className="object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-r from-amazon-navy via-amazon-navy/70 to-transparent" />
+        <div className="hero-bottom-fade absolute inset-x-0 bottom-0" />
+      </motion.div>
+
+      <div className="relative z-20 mx-auto flex min-h-[520px] max-w-7xl flex-col justify-center px-5 py-12">
         <motion.div
           key={`${slide.title}-content`}
           initial={{ opacity: 0, y: 16 }}

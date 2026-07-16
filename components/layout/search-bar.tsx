@@ -87,7 +87,13 @@ export function SearchBar({ className, initialQuery = "", compact = false }: Sea
 
   return (
     <div ref={containerRef} className={cn("relative flex-1", className)}>
-      <form onSubmit={onSubmit} className="flex overflow-hidden rounded-md border-2 border-transparent bg-white focus-within:border-amazon-orange">
+      <form
+        onSubmit={onSubmit}
+        className={cn(
+          "flex overflow-hidden rounded-md border-2 border-transparent bg-white focus-within:border-amazon-orange",
+          compact ? "min-h-10" : "min-h-11"
+        )}
+      >
         {!compact && (
           <label className="sr-only" htmlFor="search-category">
             Category
@@ -104,7 +110,10 @@ export function SearchBar({ className, initialQuery = "", compact = false }: Sea
           onFocus={() => setOpen(true)}
           onKeyDown={onKeyDown}
           placeholder="Search Amazon.in"
-          className={cn("min-w-0 flex-1 text-slate-950 outline-none", compact ? "px-3 py-2 text-sm" : "px-4 py-2.5")}
+          className={cn(
+            "min-w-0 flex-1 text-slate-950 outline-none",
+            compact ? "px-3 py-2 text-sm" : "px-5 py-2 text-[15px]"
+          )}
           aria-label="Search products"
           aria-expanded={!!showPanel}
           aria-controls="search-suggestions"
@@ -113,7 +122,10 @@ export function SearchBar({ className, initialQuery = "", compact = false }: Sea
         />
         <button
           type="button"
-          className="hidden w-11 items-center justify-center border-l border-slate-200 text-slate-600 hover:bg-slate-50 sm:flex"
+          className={cn(
+            "hidden items-center justify-center border-l border-slate-200 text-slate-600 hover:bg-slate-50 sm:flex",
+            compact ? "w-10" : "w-11"
+          )}
           aria-label="Voice search"
           onClick={() => {
             const win = window as Window & {
@@ -146,7 +158,7 @@ export function SearchBar({ className, initialQuery = "", compact = false }: Sea
           type="submit"
           className={cn(
             "flex items-center justify-center bg-amazon-gold text-slate-950 hover:bg-[#f5a742]",
-            compact ? "w-11" : "w-12"
+            compact ? "w-10" : "w-[46px]"
           )}
           aria-label="Search"
         >

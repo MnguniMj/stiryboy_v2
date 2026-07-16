@@ -92,9 +92,12 @@ export function Navbar() {
           )}
         </div>
 
-        <SearchBar className="hidden md:flex" initialQuery={searchParams.get("q") ?? ""} />
+        <SearchBar
+          className="hidden min-w-0 md:flex md:flex-[1.6] lg:flex-[2.2] xl:flex-[2.7]"
+          initialQuery={searchParams.get("q") ?? ""}
+        />
 
-        <div className="ml-auto flex items-center gap-0.5 sm:gap-1">
+        <div className="ml-auto flex shrink-0 items-center gap-0.5 sm:gap-1">
           <button
             type="button"
             onClick={() => setLang((l) => (l === "EN" ? "HI" : "EN"))}

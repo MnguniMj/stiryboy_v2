@@ -71,6 +71,49 @@ select option {
     @apply rounded border border-slate-200 bg-white p-4 shadow-card transition hover:shadow-cardHover dark:border-white/10 dark:bg-slate-900;
   }
 
+  .hero-bottom-fade {
+    height: clamp(200px, 26vw, 250px);
+    background:
+      linear-gradient(
+        to top,
+        var(--amazon-page) 0%,
+        color-mix(in srgb, var(--amazon-page) 98%, transparent) 18%,
+        color-mix(in srgb, var(--amazon-page) 92%, transparent) 34%,
+        color-mix(in srgb, var(--amazon-page) 76%, transparent) 52%,
+        color-mix(in srgb, var(--amazon-page) 42%, transparent) 72%,
+        transparent 100%
+      ),
+      linear-gradient(
+        to top,
+        rgba(15, 23, 42, 0.38) 0%,
+        rgba(15, 23, 42, 0.24) 30%,
+        rgba(15, 23, 42, 0.12) 56%,
+        rgba(15, 23, 42, 0.04) 76%,
+        rgba(15, 23, 42, 0) 100%
+      );
+  }
+
+  .dark .hero-bottom-fade {
+    background:
+      linear-gradient(
+        to top,
+        var(--amazon-page) 0%,
+        color-mix(in srgb, var(--amazon-page) 98%, transparent) 18%,
+        color-mix(in srgb, var(--amazon-page) 92%, transparent) 34%,
+        color-mix(in srgb, var(--amazon-page) 78%, transparent) 52%,
+        color-mix(in srgb, var(--amazon-page) 46%, transparent) 72%,
+        transparent 100%
+      ),
+      linear-gradient(
+        to top,
+        rgba(2, 6, 23, 0.44) 0%,
+        rgba(2, 6, 23, 0.28) 30%,
+        rgba(2, 6, 23, 0.14) 56%,
+        rgba(2, 6, 23, 0.05) 76%,
+        rgba(2, 6, 23, 0) 100%
+      );
+  }
+
   .amazon-section {
     @apply mx-auto max-w-amazon px-3 py-4 sm:px-4;
   }

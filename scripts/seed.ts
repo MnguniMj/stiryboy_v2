@@ -28,70 +28,114 @@ async function main() {
     }
   });
 
+  const seededProducts = new Map<string, Awaited<ReturnType<typeof prisma.product.upsert>>>();
+
   for (const product of products) {
-    await prisma.product.upsert({
+    const { id: _ignoredId, ...productData } = product;
+
+    const seededProduct = await prisma.product.upsert({
       where: { slug: product.slug },
-      update: product,
-      create: product
+      update: productData,
+      create: productData
+    });
+
+    seededProducts.set(product.slug, seededProduct);
+  }
+
+  const defaultAddressData = {
+    userId: user.id,
+    fullName: "Demo Customer",
+    phone: "+91 98765 43210",
+    line1: "221B Indiranagar Main Road",
+    line2: "Near Metro Station",
+    city: "Bengaluru",
+    state: "Karnataka",
+    pincode: "560038",
+    isDefault: true
+  };
+
+  const existingDefaultAddress = await prisma.address.findFirst({
+    where: { userId: user.id, isDefault: true }
+  });
+
+  if (existingDefaultAddress) {
+    await prisma.address.update({
+      where: { id: existingDefaultAddress.id },
+      data: defaultAddressData
+    });
+  } else {
+    await prisma.address.create({
+      data: defaultAddressData
     });
   }
 
-  await prisma.address.upsert({
-    where: { id: "6659f8a4e0f1a001b2220001" },
-    update: {},
-    create: {
-      id: "6659f8a4e0f1a001b2220001",
-      userId: user.id,
-      fullName: "Demo Customer",
-      phone: "+91 98765 43210",
-      line1: "221B Indiranagar Main Road",
-      line2: "Near Metro Station",
-      city: "Bengaluru",
-      state: "Karnataka",
-      pincode: "560038",
-      isDefault: true
+  const firstProduct = seededProducts.get(products[0].slug);
+  const secondProduct = seededProducts.get(products[2].slug);
+
+  if (!firstProduct || !secondProduct) {
+    throw new Error("Seeded products were not found after upsert.");
+  }
+
+  const orderData = {
+    userId: user.id,
+    status: "DELIVERED" as const,
+    paymentStatus: "PAID" as const,
+    subtotal: firstProduct.price + secondProduct.price,
+    shipping: 0,
+    tax: Math.round((firstProduct.price + secondProduct.price) * 0.18),
+    total: firstProduct.price + secondProduct.price + Math.round((firstProduct.price + secondProduct.price) * 0.18),
+    shippingFullName: "Demo Customer",
+    shippingPhone: "+91 98765 43210",
+    shippingLine1: "221B Indiranagar Main Road",
+    shippingLine2: "Near Metro Station",
+    shippingCity: "Bengaluru",
+    shippingState: "Karnataka",
+    shippingPincode: "560038"
+  };
+
+  const orderItems = [
+    {
+      productId: firstProduct.id,
+      title: firstProduct.title,
+      image: firstProduct.images[0],
+      price: firstProduct.price,
+      quantity: 1
+    },
+    {
+      productId: secondProduct.id,
+      title: secondProduct.title,
+      image: secondProduct.images[0],
+      price: secondProduct.price,
+      quantity: 1
     }
-  });
+  ];
 
-  const firstProduct = products[0];
-  const secondProduct = products[2];
-
-  const order = await prisma.order.create({
-    data: {
-      userId: user.id,
-      status: "DELIVERED",
-      paymentStatus: "PAID",
-      subtotal: firstProduct.price + secondProduct.price,
-      shipping: 0,
-      tax: Math.round((firstProduct.price + secondProduct.price) * 0.18),
-      total: firstProduct.price + secondProduct.price + Math.round((firstProduct.price + secondProduct.price) * 0.18),
-      shippingFullName: "Demo Customer",
+  const existingOrder = await prisma.order.findFirst({
+    where: {
       shippingPhone: "+91 98765 43210",
-      shippingLine1: "221B Indiranagar Main Road",
-      shippingLine2: "Near Metro Station",
-      shippingCity: "Bengaluru",
-      shippingState: "Karnataka",
-      shippingPincode: "560038",
-      items: {
-        create: [
-          {
-            productId: firstProduct.id,
-            title: firstProduct.title,
-            image: firstProduct.images[0],
-            price: firstProduct.price,
-            quantity: 1
-          },
-          {
-            productId: secondProduct.id,
-            title: secondProduct.title,
-            image: secondProduct.images[0],
-            price: secondProduct.price,
-            quantity: 1
-          }
-        ]
-      }
+      status: "DELIVERED"
     }
   });
+
+  const order = existingOrder
+    ? await prisma.order.update({
+        where: { id: existingOrder.id },
+        data: {
+          ...orderData,
+          items: {
+            deleteMany: {},
+            create: orderItems
+          }
+        }
+      })
+    : await prisma.order.create({
+        data: {
+          ...orderData,
+          items: {
+            create: orderItems
+          }
+        }
+      });
 
   console.log(`Seeded ${products.length} products`);
   console.log(`Admin login: admin@example.com / Admin@123`);
