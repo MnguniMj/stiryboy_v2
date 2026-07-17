@@ -93,7 +93,7 @@ export function Navbar() {
         </div>
 
         <SearchBar
-          className="hidden min-w-0 md:flex md:flex-[1.6] lg:flex-[2.2] xl:flex-[2.7]"
+          className="hidden min-w-0 md:flex md:flex-[2.8] lg:flex-[3.6] xl:flex-[4.2]"
           initialQuery={searchParams.get("q") ?? ""}
         />
 

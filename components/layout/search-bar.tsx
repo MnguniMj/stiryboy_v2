@@ -86,11 +86,11 @@ export function SearchBar({ className, initialQuery = "", compact = false }: Sea
   const showPanel = open && (query || history.length > 0);
 
   return (
-    <div ref={containerRef} className={cn("relative flex-1", className)}>
+    <div ref={containerRef} className={cn("relative flex-1 min-w-[280px] md:min-w-[360px] lg:min-w-[460px]", className)}>
       <form
         onSubmit={onSubmit}
         className={cn(
-          "flex overflow-hidden rounded-md border-2 border-transparent bg-white focus-within:border-amazon-orange",
+          "flex w-full overflow-hidden rounded-md border-2 border-transparent bg-white focus-within:border-amazon-orange",
           compact ? "min-h-10" : "min-h-11"
         )}
       >
