@@ -19,20 +19,31 @@ type SearchBarProps = {
   compact?: boolean;
 };
 
-export function SearchBar({ className, initialQuery = "", compact = false }: SearchBarProps) {
+export function SearchBar({
+  className,
+  initialQuery = "",
+  compact = false,
+}: SearchBarProps) {
   const router = useRouter();
   const [query, setQuery] = useState(initialQuery);
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
   const containerRef = useRef<HTMLDivElement>(null);
-  const { products, queries, loading } = useSearchSuggestions(open ? query : "");
+  const { products, queries, loading } = useSearchSuggestions(
+    open ? query : "",
+  );
   const history = useSearchHistoryStore((s) => s.queries);
   const addHistory = useSearchHistoryStore((s) => s.add);
   const removeHistory = useSearchHistoryStore((s) => s.remove);
 
   const allSuggestions = [
     ...queries.map((q) => ({ type: "query" as const, value: q })),
-    ...products.map((p) => ({ type: "product" as const, value: p.slug, label: p.title, product: p }))
+    ...products.map((p) => ({
+      type: "product" as const,
+      value: p.slug,
+      label: p.title,
+      product: p,
+    })),
   ];
 
   useEffect(() => {
@@ -86,12 +97,18 @@ export function SearchBar({ className, initialQuery = "", compact = false }: Sea
   const showPanel = open && (query || history.length > 0);
 
   return (
-    <div ref={containerRef} className={cn("relative flex-1 min-w-[280px] md:min-w-[360px] lg:min-w-[460px]", className)}>
+    <div
+      ref={containerRef}
+      className={cn(
+        "relative flex-1 min-w-[280px] md:min-w-[360px] lg:min-w-[460px]",
+        className,
+      )}
+    >
       <form
         onSubmit={onSubmit}
         className={cn(
           "flex w-full overflow-hidden rounded-md border-2 border-transparent bg-white focus-within:border-amazon-orange",
-          compact ? "min-h-10" : "min-h-11"
+          compact ? "min-h-10" : "min-h-11",
         )}
       >
         {!compact && (
@@ -112,7 +129,7 @@ export function SearchBar({ className, initialQuery = "", compact = false }: Sea
           placeholder="Search Amazon.in"
           className={cn(
             "min-w-0 flex-1 text-slate-950 outline-none",
-            compact ? "px-3 py-2 text-sm" : "px-5 py-2 text-[15px]"
+            compact ? "px-3 py-2 text-sm" : "px-5 py-2 text-[15px]",
           )}
           aria-label="Search products"
           aria-expanded={!!showPanel}
@@ -124,14 +141,18 @@ export function SearchBar({ className, initialQuery = "", compact = false }: Sea
           type="button"
           className={cn(
             "hidden items-center justify-center border-l border-slate-200 text-slate-600 hover:bg-slate-50 sm:flex",
-            compact ? "w-10" : "w-11"
+            compact ? "w-10" : "w-11",
           )}
           aria-label="Voice search"
           onClick={() => {
             const win = window as Window & {
               webkitSpeechRecognition?: new () => {
                 lang: string;
-                onresult: (e: { results: { [i: number]: { [j: number]: { transcript: string } } } }) => void;
+                onresult: (e: {
+                  results: {
+                    [i: number]: { [j: number]: { transcript: string } };
+                  };
+                }) => void;
                 start: () => void;
               };
             };
@@ -158,7 +179,7 @@ export function SearchBar({ className, initialQuery = "", compact = false }: Sea
           type="submit"
           className={cn(
             "flex items-center justify-center bg-amazon-gold text-slate-950 hover:bg-[#f5a742]",
-            compact ? "w-10" : "w-[46px]"
+            compact ? "w-10" : "w-[46px]",
           )}
           aria-label="Search"
         >
@@ -174,7 +195,9 @@ export function SearchBar({ className, initialQuery = "", compact = false }: Sea
         >
           {!query && history.length > 0 && (
             <div className="border-b border-slate-100 p-2 dark:border-white/10">
-              <p className="px-2 py-1 text-xs font-bold uppercase text-slate-500">Recent searches</p>
+              <p className="px-2 py-1 text-xs font-bold uppercase text-slate-500">
+                Recent searches
+              </p>
               {history.map((term) => (
                 <div key={term} className="flex items-center gap-2">
                   <button
@@ -217,7 +240,9 @@ export function SearchBar({ className, initialQuery = "", compact = false }: Sea
             </div>
           )}
 
-          {loading && query && <p className="px-4 py-3 text-sm text-slate-500">Searching…</p>}
+          {loading && query && (
+            <p className="px-4 py-3 text-sm text-slate-500">Searching…</p>
+          )}
 
           {queries.map((term, index) => (
             <button
@@ -227,7 +252,7 @@ export function SearchBar({ className, initialQuery = "", compact = false }: Sea
               aria-selected={activeIndex === index}
               className={cn(
                 "flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm hover:bg-amber-50 dark:hover:bg-white/10",
-                activeIndex === index && "bg-amber-50 dark:bg-white/10"
+                activeIndex === index && "bg-amber-50 dark:bg-white/10",
               )}
               onClick={() => navigateToSearch(term)}
             >
@@ -240,7 +265,7 @@ export function SearchBar({ className, initialQuery = "", compact = false }: Sea
                     </strong>
                   ) : (
                     part
-                  )
+                  ),
                 )}
               </span>
             </button>
@@ -256,16 +281,24 @@ export function SearchBar({ className, initialQuery = "", compact = false }: Sea
                 aria-selected={activeIndex === idx}
                 className={cn(
                   "flex items-center gap-3 border-t border-slate-50 px-3 py-2 hover:bg-amber-50 dark:border-white/5 dark:hover:bg-white/10",
-                  activeIndex === idx && "bg-amber-50 dark:bg-white/10"
+                  activeIndex === idx && "bg-amber-50 dark:bg-white/10",
                 )}
                 onClick={() => setOpen(false)}
               >
                 <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded bg-slate-100">
-                  <Image src={product.images[0]} alt="" fill className="object-cover" sizes="40px" />
+                  <Image
+                    src={product.images[0]}
+                    alt=""
+                    fill
+                    className="object-cover"
+                    sizes="40px"
+                  />
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm">{product.title}</p>
-                  <p className="text-xs font-bold text-slate-700 dark:text-slate-300">{formatPrice(product.price)}</p>
+                  <p className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                    {formatPrice(product.price)}
+                  </p>
                 </div>
               </Link>
             );
