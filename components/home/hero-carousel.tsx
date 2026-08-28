@@ -3,7 +3,6 @@
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { heroSlides } from "@/lib/data";
@@ -74,12 +73,19 @@ export function HeroCarousel() {
         transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
         className="absolute inset-0 z-10"
       >
-        <Image src={slide.image} alt={slide.title} fill priority sizes="100vw" className="object-cover" />
+        <Image
+          src={slide.image}
+          alt={slide.title}
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+        />
         <div className="absolute inset-0 bg-gradient-to-r from-amazon-navy via-amazon-navy/70 to-transparent" />
         <div className="hero-bottom-fade absolute inset-x-0 bottom-0" />
       </motion.div>
 
-      <div className="relative z-20 mx-auto flex min-h-[520px] max-w-7xl flex-col justify-center px-5 py-12">
+      <div className="relative z-20 mx-auto flex min-h-[520px] max-w-7xl flex-col px-5 pt-10 pb-12">
         <motion.div
           key={`${slide.title}-content`}
           initial={{ opacity: 0, y: 16 }}
@@ -87,25 +93,7 @@ export function HeroCarousel() {
           transition={{ duration: 0.45 }}
           className="max-w-2xl"
         >
-          <p className="mb-4 inline-flex rounded-sm bg-amazon-gold px-3 py-1 text-sm font-black uppercase text-slate-950">
-            {slide.eyebrow}
-          </p>
-          <h1 className="text-4xl font-black tracking-normal sm:text-5xl lg:text-6xl">{slide.title}</h1>
-          <p className="mt-5 max-w-xl text-base leading-7 text-slate-100 sm:text-lg">{slide.description}</p>
-          <div className="mt-7 flex flex-wrap gap-3">
-            <Link
-              href="/search"
-              className="inline-flex h-11 items-center rounded-md bg-amazon-gold px-4 text-sm font-bold text-slate-950 shadow-sm hover:bg-[#f5a742]"
-            >
-              {slide.cta}
-            </Link>
-            <Link
-              href="/search?sort=discount"
-              className="inline-flex h-11 items-center rounded-md border border-white/30 px-4 text-sm font-bold hover:bg-white/10"
-            >
-              View lightning deals
-            </Link>
-          </div>
+          <h1 className="text-3xl font-black tracking-normal sm:text-4xl lg:text-5xl">{slide.title}</h1>
         </motion.div>
 
         <div className="absolute bottom-16 right-5 flex gap-2">

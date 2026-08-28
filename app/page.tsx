@@ -31,7 +31,7 @@ export default function HomePage() {
   return (
     <div className="pb-8">
       <HeroCarousel />
-      <div className="-mt-24 relative z-10 space-y-6">
+      <div className="-mt-[364px] relative z-20 space-y-6">
         <div className="amazon-section">
           <CategoryTiles categories={categories} />
         </div>

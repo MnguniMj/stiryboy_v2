@@ -107,7 +107,7 @@ export function SearchBar({
       <form
         onSubmit={onSubmit}
         className={cn(
-          "flex w-full overflow-hidden rounded-md border-2 border-transparent bg-white focus-within:border-amazon-orange",
+          "flex w-full overflow-hidden rounded-full border-2 border-white/10 bg-white/5 backdrop-blur-sm focus-within:border-amazon-orange",
           compact ? "min-h-10" : "min-h-11",
         )}
       >
@@ -126,10 +126,10 @@ export function SearchBar({
           }}
           onFocus={() => setOpen(true)}
           onKeyDown={onKeyDown}
-          placeholder="Search Amazon.in"
+          placeholder="Search on StiryBoy..."
           className={cn(
-            "min-w-0 flex-1 text-slate-950 outline-none",
-            compact ? "px-3 py-2 text-sm" : "px-5 py-2 text-[15px]",
+            "min-w-0 flex-1 bg-transparent text-white placeholder:text-slate-300 outline-none",
+            compact ? "px-3 py-2 pr-1 text-sm" : "px-5 py-2 pr-1 text-[15px]",
           )}
           aria-label="Search products"
           aria-expanded={!!showPanel}
@@ -140,8 +140,8 @@ export function SearchBar({
         <button
           type="button"
           className={cn(
-            "hidden items-center justify-center border-l border-slate-200 text-slate-600 hover:bg-slate-50 sm:flex",
-            compact ? "w-10" : "w-11",
+            "hidden items-center justify-center border-l border-white/10 text-slate-200 hover:bg-white/10 sm:flex",
+            compact ? "w-8" : "w-9",
           )}
           aria-label="Voice search"
           onClick={() => {
@@ -178,12 +178,12 @@ export function SearchBar({
         <button
           type="submit"
           className={cn(
-            "flex items-center justify-center bg-amazon-gold text-slate-950 hover:bg-[#f5a742]",
-            compact ? "w-10" : "w-[46px]",
+            "shrink-0 flex items-center justify-center rounded-full bg-amazon-light text-white hover:bg-[#4b5d73]",
+            compact ? "m-1 h-8 w-8" : "m-1 h-9 w-9",
           )}
           aria-label="Search"
         >
-          <Search className={compact ? "h-4 w-4" : "h-5 w-5"} />
+          <Search className={compact ? "h-3.5 w-3.5" : "h-4 w-4"} />
         </button>
       </form>
 

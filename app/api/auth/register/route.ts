@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
+import { ZodError } from "zod";
 
 import { prisma } from "@/lib/prisma";
 import { registerSchema } from "@/lib/validators";
@@ -12,7 +13,10 @@ export async function POST(request: Request) {
     });
 
     if (existingUser) {
-      return NextResponse.json({ message: "An account already exists for this email." }, { status: 409 });
+      return NextResponse.json(
+        { message: "An account already exists for this email." },
+        { status: 409 }
+      );
     }
 
     const password = await bcrypt.hash(payload.password, 12);
@@ -33,6 +37,47 @@ export async function POST(request: Request) {
     return NextResponse.json({ user }, { status: 201 });
   } catch (error) {
     console.error("REGISTER_ERROR", error);
-    return NextResponse.json({ message: "Unable to create account." }, { status: 400 });
+
+    if (error instanceof ZodError) {
+      const firstIssue = error.issues[0];
+      return NextResponse.json(
+        { message: firstIssue?.message ?? "Invalid input." },
+        { status: 400 }
+      );
+    }
+
+    const prismaCode =
+      error && typeof error === "object" && "code" in error
+        ? String((error as { code?: unknown }).code ?? "")
+        : "";
+
+    if (
+      prismaCode === "P2010" ||
+      (error instanceof Error &&
+        (error.message.includes("Server selection timeout") ||
+          error.message.includes("No available servers") ||
+          error.message.includes("received fatal alert: InternalError") ||
+          error.message.toLowerCase().includes("database")))
+    ) {
+      return NextResponse.json(
+        {
+          message:
+            "Database unreachable. Check your DATABASE_URL or allow this IP in MongoDB Atlas."
+        },
+        { status: 503 }
+      );
+    }
+
+    if (error instanceof Error) {
+      return NextResponse.json(
+        { message: error.message },
+        { status: 400 }
+      );
+    }
+
+    return NextResponse.json(
+      { message: "Unable to create account." },
+      { status: 400 }
+    );
   }
 }

@@ -5,10 +5,39 @@ import { Chrome, Eye, EyeOff, Github, Loader2, Lock, Mail, UserRound } from "luc
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
+
+type ProvidersStatus = {
+  google: boolean;
+  github: boolean;
+};
+
+function buildLoginErrorMessage(error: string | undefined | null, status: number | undefined) {
+  if (!error) return "Invalid email or password.";
+
+  const code = error.trim();
+  switch (code) {
+    case "CredentialsSignin":
+      return "Invalid email or password. Please check your details and try again.";
+    case "AccessDenied":
+      return "Sign-in was denied.";
+    case "Configuration":
+      return "Server configuration error. Please contact support or check environment variables.";
+    case "OAuthSignin":
+    case "OAuthCallback":
+    case "OAuthCreateAccount":
+    case "OAuthAccountNotLinked":
+      return `Sign-in with provider failed (${code}).`;
+    default:
+      if (status && status >= 500) {
+        return "Server error. Please try again in a moment.";
+      }
+      return "Invalid email or password.";
+  }
+}
 
 export function AuthCard({ mode }: { mode: "login" | "signup" }) {
   const router = useRouter();
@@ -16,6 +45,38 @@ export function AuthCard({ mode }: { mode: "login" | "signup" }) {
   const callbackUrl = searchParams.get("callbackUrl") ?? "/";
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [providers, setProviders] = useState<ProvidersStatus | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    fetch("/api/auth/providers-status", { cache: "no-store" })
+      .then(async (r) => (r.ok ? (r.json() as Promise<ProvidersStatus>) : null))
+      .then((data) => {
+        if (mounted && data) setProviders(data);
+      })
+      .catch(() => {
+        if (mounted) setProviders({ google: false, github: false });
+      });
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  async function handleOAuth(provider: "google" | "github") {
+    try {
+      const result = await signIn(provider, { callbackUrl, redirect: false });
+      if (result?.error) {
+        throw new Error(buildLoginErrorMessage(result.error, result.status));
+      }
+      if (result?.url) {
+        router.push(result.url);
+      }
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Provider sign-in failed."
+      );
+    }
+  }
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -36,9 +97,14 @@ export function AuthCard({ mode }: { mode: "login" | "signup" }) {
           })
         });
 
+        const data = await response.json().catch(() => ({}));
+
         if (!response.ok) {
-          const data = await response.json();
-          throw new Error(data.message ?? "Unable to create account.");
+          const msg =
+            typeof data?.message === "string" && data.message.trim().length > 0
+              ? data.message
+              : "Unable to create account.";
+          throw new Error(msg);
         }
       }
 
@@ -50,7 +116,7 @@ export function AuthCard({ mode }: { mode: "login" | "signup" }) {
       });
 
       if (result?.error) {
-        throw new Error("Invalid email or password.");
+        throw new Error(buildLoginErrorMessage(result.error, result.status));
       }
 
       toast.success(mode === "signup" ? "Account created" : "Welcome back");
@@ -62,6 +128,8 @@ export function AuthCard({ mode }: { mode: "login" | "signup" }) {
       setLoading(false);
     }
   }
+
+  const hasAnyProvider = providers ? providers.google || providers.github : true;
 
   return (
     <motion.div
@@ -81,16 +149,37 @@ export function AuthCard({ mode }: { mode: "login" | "signup" }) {
         </p>
       </div>
 
-      <div className="grid gap-2">
-        <Button type="button" variant="outline" className="w-full" onClick={() => signIn("google", { callbackUrl })}>
-          <Chrome className="h-4 w-4" />
-          Continue with Google
-        </Button>
-        <Button type="button" variant="outline" className="w-full" onClick={() => signIn("github", { callbackUrl })}>
-          <Github className="h-4 w-4" />
-          Continue with GitHub
-        </Button>
-      </div>
+      {hasAnyProvider && (
+        <div className="grid gap-2">
+          {providers ? (
+            <>
+              {providers.google && (
+                <Button type="button" variant="outline" className="w-full" onClick={() => handleOAuth("google")}>
+                  <Chrome className="h-4 w-4" />
+                  Continue with Google
+                </Button>
+              )}
+              {providers.github && (
+                <Button type="button" variant="outline" className="w-full" onClick={() => handleOAuth("github")}>
+                  <Github className="h-4 w-4" />
+                  Continue with GitHub
+                </Button>
+              )}
+            </>
+          ) : (
+            <>
+              <Button type="button" variant="outline" className="w-full" onClick={() => handleOAuth("google")}>
+                <Chrome className="h-4 w-4" />
+                Continue with Google
+              </Button>
+              <Button type="button" variant="outline" className="w-full" onClick={() => handleOAuth("github")}>
+                <Github className="h-4 w-4" />
+                Continue with GitHub
+              </Button>
+            </>
+          )}
+        </div>
+      )}
 
       {mode === "login" && (
         <p className="mt-3 text-center text-sm">
