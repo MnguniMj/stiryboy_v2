@@ -746,7 +746,7 @@ function AddressCard({
         </Field>
         <Field
           label="Google location"
-          hint="Paste a Google Maps place, pin, shared link, or searchable location name"
+          hint="Search for a place or pin it on the map"
         >
           <GoogleLocationField
             value={value.googleLocation}
