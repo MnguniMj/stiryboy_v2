@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
+import { formatPrice } from "@/lib/utils";
+
 export default function RecentlyViewed() {
   const [items, setItems] = useState<any[]>([]);
 
@@ -28,8 +30,12 @@ export default function RecentlyViewed() {
                   className="absolute inset-0 h-full w-full object-cover transition duration-300 group-hover:scale-105"
                 />
               </div>
-              <p className="text-sm font-semibold mt-3 line-clamp-2 text-slate-950 dark:text-white group-hover:text-amazon-teal">{item.title}</p>
-              <p className="font-black mt-2 text-slate-950 dark:text-white">₹{item.price.toLocaleString()}</p>
+              <p className="text-sm font-semibold mt-3 line-clamp-2 text-slate-950 dark:text-white group-hover:text-amazon-teal">
+                {item.title}
+              </p>
+              <p className="font-black mt-2 text-slate-950 dark:text-white">
+                {formatPrice(item.price)}
+              </p>
             </div>
           </Link>
         ))}

@@ -35,7 +35,7 @@ export async function POST(request: Request) {
     const names = products.slice(0, 3).map((p) => `• ${p.brand} ${p.title.split(",")[0]} — ${p.price}`);
     return NextResponse.json({
       reply: `Here are popular picks to compare:\n${names.join("\n")}\nUse the compare button on any product card.`,
-      suggestions: ["Best phones under ₹30k", "Top laptops"]
+      suggestions: ["Best phones under LSL 30k", "Top laptops"]
     });
   }
 

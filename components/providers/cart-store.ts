@@ -93,7 +93,8 @@ export const useCartStore = create<CartState>()(
       count: () => get().items.reduce((total, item) => total + item.quantity, 0)
     }),
     {
-      name: "amazon-india-cart"
+      name: "amazon-india-cart",
+      skipHydration: true
     }
   )
 );

@@ -16,6 +16,6 @@ export const useDeliveryStore = create<DeliveryState>()(
       city: "New Delhi",
       setLocation: (pincode, city) => set({ pincode, city })
     }),
-    { name: "amazon-india-delivery" }
+    { name: "amazon-india-delivery", skipHydration: true }
   )
 );

@@ -31,7 +31,7 @@ export function applyCoupon(subtotal: number, code: string): { discount: number;
 
   const coupon = coupons[code.toUpperCase()];
   if (!coupon) return { discount: 0, message: "Invalid coupon code" };
-  if (subtotal < coupon.min) return { discount: 0, message: `Minimum order ₹${coupon.min} required` };
+  if (subtotal < coupon.min) return { discount: 0, message: `Minimum order LSL ${coupon.min} required` };
 
   const discount = coupon.pct
     ? Math.round((subtotal * coupon.pct) / 100)

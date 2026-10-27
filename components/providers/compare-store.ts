@@ -29,6 +29,6 @@ export const useCompareStore = create<CompareState>()(
       clear: () => set({ items: [] }),
       has: (productId) => get().items.some((item) => item.id === productId)
     }),
-    { name: "amazon-india-compare" }
+    { name: "amazon-india-compare", skipHydration: true }
   )
 );

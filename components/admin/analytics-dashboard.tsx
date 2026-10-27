@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 
 const metrics = [
-  { label: "Revenue", value: "₹12.4L", change: "+18%", color: "bg-amazon-orange" },
+  { label: "Revenue", value: "LSL 12.4L", change: "+18%", color: "bg-amazon-orange" },
   { label: "Orders", value: "1,284", change: "+12%", color: "bg-amazon-teal" },
   { label: "Users", value: "8,420", change: "+24%", color: "bg-blue-600" },
   { label: "Conversion", value: "3.8%", change: "+0.4%", color: "bg-amazon-green" }

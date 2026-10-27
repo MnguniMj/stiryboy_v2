@@ -25,6 +25,6 @@ export const useSearchHistoryStore = create<SearchHistoryState>()(
       remove: (query) => set({ queries: get().queries.filter((q) => q !== query) }),
       clear: () => set({ queries: [] })
     }),
-    { name: "amazon-india-search-history" }
+    { name: "amazon-india-search-history", skipHydration: true }
   )
 );

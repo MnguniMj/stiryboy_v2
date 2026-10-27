@@ -27,6 +27,6 @@ export const useWishlistStore = create<WishlistState>()(
       remove: (productId) => set({ items: get().items.filter((item) => item.id !== productId) }),
       has: (productId) => get().items.some((item) => item.id === productId)
     }),
-    { name: "amazon-india-wishlist" }
+    { name: "amazon-india-wishlist", skipHydration: true }
   )
 );
